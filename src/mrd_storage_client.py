@@ -22,6 +22,10 @@ class SerializeStorageException(StorageException):
     """Raised when a (de-)serialization error occured"""
 
 
+class HealthcheckStorageException(StorageException):
+    """Raised when an healthcheck failed"""
+
+
 class Blob:
     def __init__(self, **kwargs):
         self.__dict__.update(**kwargs)
@@ -55,19 +59,24 @@ class Storage:
         self.session = session
 
     def healthcheck(self):
-        """Healthcheck can be used to verify that that the server is functioning
+        """Healthcheck can be used to verify that that the server is functioning.
+        Raises HealthcheckStorageException if healthcheck failed or
+        ConnectionStorageException if the connectiion failed.
 
         Example:
             >>> storage = Storage("localhost", 3333)
             >>> storage.healthcheck()
         """
         try:
-            self.http.get("healthcheck")
+            response = self.http.get("healthcheck")
+            if not response.ok:
+                raise HealthcheckStorageException
         except requests.exceptions.ConnectionError:
             raise ConnectionStorageException
 
     def store(self, obj, name=None, ttl=None, custom_tags=None):
-        """Serialize and store an object as a blob
+        """Serialize and store an object as a blob.
+        Raises SerializeStorageException if the serialization failed.
 
         Example:
             >>> import numpy as np

@@ -1,5 +1,5 @@
 # mrd-storage-client
-A Python client for the MRD Storage Server
+A Python client for the [MRD Storage Server](https://github.com/ismrmrd/mrd-storage-server)
 
 Start an MRD Storage Server using Docker:
 ```
@@ -11,7 +11,7 @@ Simple usage:
 from mrd_storage_client import Storage
 
 storage = Storage("localhost", 3333)
-example_dict ={"key": "value"}
+example_dict = {"key": "value"}
 storage.store(example_dict)
 fetched_dict = storage.fetch_latest()
 assert example_dict == fetched_dict
