@@ -24,15 +24,14 @@ from mrd_storage_client import Storage
 
 storage = Storage("localhost", 3333, subject="my_test_subject")
 
-# Store five random arrays with 1 minute TTL and custom tags
-for n in range(5):
-    my_array = np.random.rand(32, 32)
-    storage.store(my_array, name="my_arrays", ttl="1m", custom_tags={"array_num": n})
+# Store five random arrays with 1 minute TTL and a custom tag "array_idx"
+arrays = (np.random.rand(32, 32) for _ in range(5))
+for idx, my_array in enumerate(arrays):
+    storage.store(my_array, name="my_arrays", ttl="1m", custom_tags={"array_idx": idx})
 
 # Fetch blobs as an iterator
 for blob in storage.fetch_blobs(name="my_arrays"):
-    this_array_num = blob.__dict__.get("array_num")
-    print(f"Got array_num = {this_array_num}")
+    print(f"Got array_idx = {blob.get('array_idx')}")
 ```
 
 For a complete API documentation, see the [mrd-storage-server](https://github.com/ismrmrd/mrd-storage-server) repo.

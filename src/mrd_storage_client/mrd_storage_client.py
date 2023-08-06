@@ -1,4 +1,5 @@
 import pickle
+from typing import Any, Optional, Dict, List, Iterator, Union
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -27,17 +28,24 @@ class HealthcheckStorageException(StorageException):
 
 
 class Blob:
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
+        """Initializes a Blob instance, dynamically assigning the given keyword arguments 
+        as attributes to the instance.
+        """
         self.__dict__.update(**kwargs)
 
-    def get_data(self):
+    def get_data(self) -> bytes:
         """Fetch data from blob"""
         response = requests.get(self.data)
         return response.content
+    
+    def get(self, key: str, default=None):
+        """Provides a dict-like get method for the Blob instance."""
+        return getattr(self, key, default)
 
 
 class Storage:
-    def __init__(self, address, port, subject="$null", device=None, session=None):
+    def __init__(self, address: str, port: int, subject: str ="$null", device: Optional[str] = None, session: Optional[str] = None):
         self.address = address
         self.port = port
 
@@ -58,10 +66,10 @@ class Storage:
         self.device = device
         self.session = session
 
-    def healthcheck(self):
+    def healthcheck(self) -> None:
         """Healthcheck can be used to verify that that the server is functioning.
         Raises HealthcheckStorageException if healthcheck failed or
-        ConnectionStorageException if the connectiion failed.
+        ConnectionStorageException if the connection failed.
 
         Example:
             >>> storage = Storage("localhost", 3333)
