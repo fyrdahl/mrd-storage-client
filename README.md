@@ -15,6 +15,7 @@ example_dict = {"key": "value"}
 storage.store(example_dict)
 fetched_dict = storage.fetch_latest()
 assert example_dict == fetched_dict
+storage.close()
 ```
 
 A more advanced example:
@@ -32,6 +33,7 @@ for idx, my_array in enumerate(arrays):
 # Fetch blobs as an iterator
 for blob in storage.fetch_blobs(name="my_arrays"):
     print(f"Got array_idx = {blob.get('array_idx')}")
+storage.close()
 ```
 
 For a complete API documentation, see the [mrd-storage-server](https://github.com/ismrmrd/mrd-storage-server) repo.

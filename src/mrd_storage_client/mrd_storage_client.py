@@ -1,5 +1,5 @@
 import pickle
-from typing import Any, Optional, Dict, List, Iterator, Union
+from typing import Any, Dict, Iterator, List, Optional, Union
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -29,7 +29,7 @@ class HealthcheckStorageException(StorageException):
 
 class Blob:
     def __init__(self, **kwargs) -> None:
-        """Initializes a Blob instance, dynamically assigning the given keyword arguments 
+        """Initializes a Blob instance, dynamically assigning the given keyword arguments
         as attributes to the instance.
         """
         self.__dict__.update(**kwargs)
@@ -38,14 +38,21 @@ class Blob:
         """Fetch data from blob"""
         response = requests.get(self.data)
         return response.content
-    
+
     def get(self, key: str, default=None):
         """Provides a dict-like get method for the Blob instance."""
         return getattr(self, key, default)
 
 
 class Storage:
-    def __init__(self, address: str, port: int, subject: str ="$null", device: Optional[str] = None, session: Optional[str] = None):
+    def __init__(
+        self,
+        address: str,
+        port: int,
+        subject: str = "$null",
+        device: Optional[str] = None,
+        session: Optional[str] = None,
+    ):
         self.address = address
         self.port = port
 
@@ -159,6 +166,10 @@ class Storage:
         new_params = {**new_params, **custom_tags}
         response = self.http.get("v1/blobs/data/latest", params=new_params)
         return self._load_object(response.content)
+
+    def close(self):
+        """Close the underlying HTTP session"""
+        self.http.close()
 
     def _search(self, name=None, at=None, custom_tags=None):
         if custom_tags is None:
