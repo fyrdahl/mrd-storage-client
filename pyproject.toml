@@ -17,9 +17,8 @@ authors = [{ name = "Alexander Fyrdahl", email = "alexander.fyrdahl@gmail.com" }
 maintainers = [{ name = "Alexander Fyrdahl", email = "alexander.fyrdahl@gmail.com" }]
 requires-python = ">=3.7"
 dependencies = [
-    "requests==2.28.1",
-    "requests-toolbelt==0.10.0",
-    "urllib3==1.26.12"
+    "requests>=2.28.1",
+    "requests-toolbelt>=1.0.0",
 ]
 keywords = ["mrd", "storage", "client"]
 
